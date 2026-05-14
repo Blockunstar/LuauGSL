@@ -1,0 +1,16 @@
+[package]
+name = "luaugsl-spirv"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+luaugsl-core = { workspace = true }
+luaugsl-hir = { workspace = true }
+rspirv = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+ed25519-dalek = { workspace = true }
+thiserror = { workspace = true }

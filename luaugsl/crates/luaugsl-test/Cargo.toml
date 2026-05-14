@@ -1,0 +1,19 @@
+[package]
+name = "luaugsl-test"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+luaugsl-core = { workspace = true }
+luaugsl-lexer = { workspace = true }
+luaugsl-parser = { workspace = true }
+luaugsl-typeck = { workspace = true }
+luaugsl-hir = { workspace = true }
+luaugsl-opt = { workspace = true }
+luaugsl-spirv = { workspace = true }
+
+[lib]
+name = "luaugsl_test"
+path = "src/lib.rs"

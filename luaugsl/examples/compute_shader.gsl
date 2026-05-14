@@ -1,0 +1,30 @@
+--!shader
+--!strict
+
+@workgroupSize(256, 1, 1)
+@binding(0, 0)
+const InputData = storageBuffer<f32>
+
+@binding(0, 1)
+const OutputData = storageBuffer<f32>
+
+@stage("compute")
+export function main(@builtin("globalInvocationId") globalId: vector3u)
+    local index: u32 = globalId.x
+    local len: u32 = bufferLength(InputData)
+    if index >= len then
+        return
+    end
+
+    local value: f32 = bufferLoad(InputData, index)
+
+    local blurred: f32 = value * 0.4
+    if index > 0 then
+        blurred = blurred + bufferLoad(InputData, index - 1) * 0.3
+    end
+    if index < len - 1 then
+        blurred = blurred + bufferLoad(InputData, index + 1) * 0.3
+    end
+
+    bufferStore(OutputData, index, blurred)
+end

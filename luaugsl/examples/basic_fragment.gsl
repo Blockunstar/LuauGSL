@@ -1,0 +1,28 @@
+--!shader
+--!strict
+
+@binding(0, 0)
+const LightData = uniform { direction: vector3, intensity: f32, color: vector3 }
+
+@binding(0, 1)
+const AlbedoTexture = texture2d
+
+@binding(0, 2)
+const MatSampler = sampler
+
+@stage("fragment")
+export function main(input: f32): f32
+    local uv: vector2 = vector2.create(0.5, 0.5)
+    local albedo: vector4 = sample(AlbedoTexture, MatSampler, uv)
+
+    local normal: vector3 = vector3.create(0.0, 1.0, 0.0)
+    local NdotL: f32 = max(dot(normal, LightData.direction), 0.0)
+    local diffuse: f32 = NdotL * LightData.intensity
+
+    local litColor: vector3 = albedo.xyz * LightData.color * diffuse
+
+    local tonemapped: vector3 = color.ACESFilm(litColor)
+    local srgb: vector3 = color.linearTosRGB(tonemapped)
+
+    return srgb.x
+end

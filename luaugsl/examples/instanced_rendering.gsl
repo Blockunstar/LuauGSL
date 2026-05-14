@@ -1,0 +1,45 @@
+--!shader
+--!strict
+
+@binding(0, 0)
+const Camera = uniform
+{
+    view: mat4x4,
+    projection: mat4x4,
+    cameraPosition: vector3
+}
+
+@binding(0, 1)
+const InstanceData = storageBuffer<InstanceInfo>
+
+@binding(0, 2)
+const MaterialTexture = texture2d
+
+@binding(0, 3)
+const MatSampler = sampler
+
+type InstanceInfo = { transform: mat4x4, colorTint: vector4, instanceId: u32 }
+
+@stage("vertex")
+export function vertexMain(
+    @builtin("instanceIndex") instanceIndex: u32,
+    @location(0) position: vector3,
+    @location(1) normal: vector3,
+    @location(2) uv: vector2
+): vector4
+    local instance: InstanceInfo = bufferLoad(InstanceData, instanceIndex)
+    local mvp: mat4x4 = Camera.projection * Camera.view * instance.transform
+    local pos: vector4 = vector4.create(position.x, position.y, position.z, 1.0)
+    return mvp * pos
+end
+
+@stage("fragment")
+export function fragmentMain(
+    @location(0) uv: vector2,
+    @location(1) worldNormal: vector3,
+    @flat @location(2) instanceIndex: u32
+): vector4
+    local instance: InstanceInfo = bufferLoad(InstanceData, instanceIndex)
+    local texColor: vector4 = sample(MaterialTexture, MatSampler, uv)
+    return texColor * instance.colorTint
+end

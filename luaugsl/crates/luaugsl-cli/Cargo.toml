@@ -1,0 +1,22 @@
+[package]
+name = "luaugsl-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "luaugsl"
+path = "src/main.rs"
+
+[dependencies]
+luaugsl-core = { workspace = true }
+luaugsl-lexer = { workspace = true }
+luaugsl-parser = { workspace = true }
+luaugsl-typeck = { workspace = true }
+luaugsl-hir = { workspace = true }
+luaugsl-opt = { workspace = true }
+luaugsl-spirv = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

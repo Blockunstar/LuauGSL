@@ -1,0 +1,37 @@
+--!shader
+--!strict
+
+@binding(0, 0)
+const InputImage = texture2d
+
+@binding(0, 1)
+const OutputImage = storageImage<rgba8>
+
+@binding(0, 2)
+const MatSampler = sampler
+
+@stage("postprocess")
+export function main(@builtin("globalInvocationId") globalId: vector3u)
+    local coord: vector2i = vector2i.create(globalId.x, globalId.y)
+
+    local color: vector4 = imageRead(InputImage, coord)
+
+    local bloom: vector4 = vector4.create(0.0, 0.0, 0.0, 0.0)
+    for dx = -1, 1, 1 do
+        for dy = -1, 1, 1 do
+            local ncx: i32 = coord.x + dx
+            local ncy: i32 = coord.y + dy
+            local neighborCoord: vector2i = vector2i.create(ncx, ncy)
+            bloom = bloom + imageRead(InputImage, neighborCoord)
+        end
+    end
+    bloom = bloom / 9.0
+
+    local result: vector4 = color + bloom * 0.5
+
+    local tm: vector3 = color.reinhard(result.xyz)
+    local srgb: vector3 = color.linearTosRGB(tm)
+    result = vector4.create(srgb.x, srgb.y, srgb.z, 1.0)
+
+    imageWrite(OutputImage, coord, result)
+end

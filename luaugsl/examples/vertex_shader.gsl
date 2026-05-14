@@ -1,0 +1,28 @@
+--!shader
+--!strict
+
+@binding(0, 0)
+const Matrices = uniform
+{
+    model: mat4x4,
+    view: mat4x4,
+    projection: mat4x4,
+    time: f32
+}
+
+@stage("vertex")
+export function main(
+    @builtin("vertexIndex") vertexId: i32,
+    @location(0) position: vector3,
+    @location(1) normal: vector3,
+    @location(2) uv: vector2
+): vector4
+    local mvp: mat4x4 = Matrices.projection * Matrices.view * Matrices.model
+    local worldPos: vector4 = vector4.create(position.x, position.y, position.z, 1.0)
+    local clipPos: vector4 = mvp * worldPos
+
+    local wave: f32 = sin(position.x * 2.0 + Matrices.time) * 0.1
+    clipPos.y = clipPos.y + wave
+
+    return clipPos
+end

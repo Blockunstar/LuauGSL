@@ -1,0 +1,11 @@
+[package]
+name = "luaugsl-opt"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+luaugsl-core = { workspace = true }
+luaugsl-hir = { workspace = true }
+petgraph = { workspace = true }

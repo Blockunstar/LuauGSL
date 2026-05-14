@@ -1,0 +1,42 @@
+[workspace]
+members = [
+    "crates/luaugsl-core",
+    "crates/luaugsl-lexer",
+    "crates/luaugsl-parser",
+    "crates/luaugsl-typeck",
+    "crates/luaugsl-hir",
+    "crates/luaugsl-opt",
+    "crates/luaugsl-spirv",
+    "crates/luaugsl-cli",
+    "crates/luaugsl-test",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["LuauGSL Contributors"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/luaugsl/luaugsl"
+rust-version = "1.78"
+
+[workspace.dependencies]
+luaugsl-core = { path = "crates/luaugsl-core" }
+luaugsl-lexer = { path = "crates/luaugsl-lexer" }
+luaugsl-parser = { path = "crates/luaugsl-parser" }
+luaugsl-typeck = { path = "crates/luaugsl-typeck" }
+luaugsl-hir = { path = "crates/luaugsl-hir" }
+luaugsl-opt = { path = "crates/luaugsl-opt" }
+luaugsl-spirv = { path = "crates/luaugsl-spirv" }
+rspirv = "0.11.0"
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+clap = { version = "=4.4.18", features = ["derive"] }
+sha2 = "0.10"
+ed25519-dalek = "=2.0.0"
+petgraph = "0.6"
+
+[profile.release]
+opt-level = 3
+lto = true
